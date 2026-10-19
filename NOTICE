@@ -1,0 +1,38 @@
+Meeting Planner
+Copyright 2026 Kristian Mario Miskovic (TekiDeki)
+https://github.com/TekiDeki/Meeting-Planner
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+--------------------------------------------------------------------------
+Third-party software
+--------------------------------------------------------------------------
+
+None. The application is a single HTML file built from the sources in this
+repository: HTML and CSS written for this project, a translation table with
+four locales, a time zone engine and a short list of cities, all in plain
+JavaScript. It bundles no library, no framework, no analytics and no font
+file, and it loads nothing from the network at runtime - not even a CDN copy
+of anything.
+
+--------------------------------------------------------------------------
+Time zone data
+--------------------------------------------------------------------------
+
+No time zone database is shipped, copied or derived here. Offsets are read at
+runtime from the browser's own implementation of Intl.DateTimeFormat, which
+follows the IANA time zone database maintained by the browser vendor. This
+project does not redistribute that data; it asks the engine that already has
+it. That is also why the page stays correct when a government changes its
+daylight saving rules: the next browser update carries the change.
+
+"UTC" and the IANA zone identifiers used in the city list (for example
+Europe/Belgrade) are identifiers from the public time zone database. Only the
+names are used.
+
+--------------------------------------------------------------------------
+Names
+--------------------------------------------------------------------------
+
+City and country names are used descriptively to identify places. No
+affiliation with any city, country or standards body is claimed or implied.
