@@ -187,6 +187,33 @@ async function pdfFiles() {
   try { await E.extractPages(merged, []); } catch (error) { noPages = error; }
   ok(noPages && noPages.code === 'empty', 'extracting nothing is refused');
 
+  /* A page that was already turned keeps its turn and gets ours on top. */
+  const already = bytes('rotated.pdf');
+  const rotatedFile = {
+    id: 'r', name: 'rotated.pdf', kind: 'pdf', mime: 'application/pdf',
+    bytes: already, size: already.length, pages: [{ src: 0, rot: 90 }]
+  };
+  const onTop = await PDFDocument.load(await E.mergeFiles([rotatedFile], { pageSize: 'a4' }));
+  eq(onTop.getPage(0).getRotation().angle, 180, 'a page at 90 plus a quarter turn is 180');
+  rotatedFile.pages[0].rot = 0;
+  const untouched = await PDFDocument.load(await E.mergeFiles([rotatedFile], { pageSize: 'a4' }));
+  eq(untouched.getPage(0).getRotation().angle, 90, 'with no turn asked for, the original stays');
+
+  /* A password protected file is refused, with the code the interface shows. */
+  let locked = null;
+  try { await E.countPages(bytes('encrypted.pdf')); } catch (error) { locked = error; }
+  ok(locked && E.isEncryptedError(locked), 'an encrypted PDF is recognised as encrypted');
+
+  /* A file that only pretends to be a PDF does not crash the page. */
+  let broken = null;
+  try {
+    const junk = bytes('broken.pdf');
+    const junkFile = { id: 'x', name: 'broken.pdf', kind: 'pdf', mime: 'application/pdf',
+                       bytes: junk, size: junk.length, pages: [{ src: 0, rot: 0 }] };
+    await E.mergeFiles([junkFile], { pageSize: 'a4' });
+  } catch (error) { broken = error; }
+  ok(broken && !E.isEncryptedError(broken), 'a broken PDF throws a plain error, not an encryption one');
+
   /* Determinism: the same input gives the same bytes twice in a row. */
   const again = await E.mergeFiles(files, { pageSize: 'a4' });
   const first = Buffer.from(merged);

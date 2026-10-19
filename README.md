@@ -43,8 +43,8 @@ document first.
 
 ```bash
 python3 build.py                  # writes index.html, single file, deterministic
-node tests/logic_test.cjs         # engine and real PDF work, no browser
-python3 tests/ui_test.py          # desktop 1280x900 and touch tablet 820x1180
+node tests/logic_test.cjs         # 68 checks: engine and real PDF work, no browser
+python3 tests/ui_test.py          # 63 checks: desktop, touch tablet and touch phone
 ```
 
 `tests/logic_test.cjs` needs the library installed next to the repo:
@@ -68,7 +68,7 @@ The UI test starts its own static server, so nothing else has to be running.
 | `build.py` | inlines everything into `index.html` and checks the rules |
 | `index.html` | the built page, committed, served by GitHub Pages |
 | `sw.js` | offline shell |
-| `tests/fixtures/` | three small PDFs and two images used by the tests |
+| `tests/fixtures/` | PDFs and images used by the tests, including one encrypted and one corrupted on purpose |
 
 ## Languages
 

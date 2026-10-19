@@ -66,8 +66,13 @@ class Watcher:
         page.on("console", self._console)
         page.on("pageerror", lambda error: self.problems.append("pageerror: " + str(error)))
 
+    # pdf-lib prints its own parse complaints while it is busy refusing a file
+    # that the page then reports properly. They are noise from the library, not
+    # a fault of the page, so they are dropped here and nothing else is.
+    NOISE = ("Trying to parse invalid object", "Invalid object ref")
+
     def _console(self, message):
-        if message.type in ("error", "warning"):
+        if message.type in ("error", "warning") and not message.text.startswith(self.NOISE):
             self.problems.append("console " + message.type + ": " + message.text)
 
     def quiet(self, label):
@@ -186,6 +191,15 @@ def desktop_run(pw, url):
     with_image = save_download(page, lambda: page.locator("#mergeBtn").click(), "with-image.pdf")
     check(pages_in_file(with_image) == 5, "the image is really in the merged file")
 
+    # A password protected file is refused, and the page stays usable after.
+    page.set_input_files("#fileInput", [str(FIX / "encrypted.pdf")])
+    page.wait_for_timeout(900)
+    message = page.locator("#toast").inner_text().lower()
+    check("password" in message or "parola" in message or "parolă" in message or "lozink" in message,
+          "an encrypted file is explained, got: " + message)
+    check(page.locator(".page").count() == 5, "the encrypted file added no pages")
+    check(not page.locator("#mergeBtn").is_disabled(), "the page is still usable afterwards")
+
     # Language switch and persistence.
     page.select_option("#langSelect", "ro")
     check(page.get_attribute("html", "lang") == "ro", "the html lang follows the switch")
@@ -236,12 +250,48 @@ def tablet_run(pw, url):
     browser.close()
 
 
+def phone_run(pw, url):
+    browser = pw.chromium.launch()
+    context = browser.new_context(
+        viewport={"width": 390, "height": 844},
+        has_touch=True,
+        is_mobile=True,
+        device_scale_factor=3,
+        accept_downloads=True,
+    )
+    page, watch = open_app(context, url)
+
+    add_files(page, ["invoice.pdf", "photo.jpg"])
+    check(page.locator(".page").count() == 4, "three pages plus the photo on a phone")
+
+    page.locator(".page").first.tap()
+    check(page.locator(".page").first.get_attribute("data-rot") == "90", "a tap turns the page on a phone")
+
+    merged = save_download(page, lambda: page.locator("#mergeBtn").tap(), "phone-merged.pdf")
+    check(pages_in_file(merged) == 4, "the phone merge keeps every page")
+
+    overflow = page.evaluate(
+        "() => document.documentElement.scrollWidth - document.documentElement.clientWidth"
+    )
+    check(overflow <= 1, f"the phone page does not scroll sideways ({overflow}px)")
+
+    # every control the user needs is at least 32 px tall
+    for selector in ("#mergeBtn", "#splitBtn", "#chooseBtn", "#undoBtn"):
+        box = page.locator(selector).bounding_box()
+        check(box and box["height"] >= 32, selector + " is tall enough to tap")
+
+    watch.quiet("phone")
+    context.close()
+    browser.close()
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     with Server(ROOT) as server:
         with sync_playwright() as pw:
             desktop_run(pw, server.url)
             tablet_run(pw, server.url)
+            phone_run(pw, server.url)
     print(f"{checks} ui checks passed")
 
 
