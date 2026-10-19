@@ -254,6 +254,30 @@ def desktop_run(pw, url):
     dropped = save_download(page, lambda: page.locator("#mergeBtn").click(), "dropped.pdf")
     check(pages_in_file(dropped) == 3, "the merged file from a drop has three pages")
 
+    # The theme button flips the page, remembers it, and leaves the page tiles
+    # white, because a tile stands for the document itself.
+    page.evaluate("localStorage.removeItem('pdfdesk.theme')")
+    page.reload(wait_until="load")
+    check(page.get_attribute("html", "data-theme") in ("light", "dark"), "desktop: no theme attribute on load")
+    light_bg = page.evaluate("getComputedStyle(document.body).backgroundColor")
+    page.click("#themeToggle")
+    page.wait_for_timeout(250)
+    check(page.get_attribute("html", "data-theme") == "dark", "desktop: the toggle did not go dark")
+    check(page.evaluate("getComputedStyle(document.body).backgroundColor") != light_bg,
+          "desktop: the background did not change with the theme")
+    check(page.evaluate("localStorage.getItem('pdfdesk.theme')") == "dark",
+          "desktop: the theme choice was not saved")
+    add_files(page, ["invoice.pdf"])
+    tile = page.evaluate("getComputedStyle(document.querySelector('.page')).backgroundColor")
+    check(tile == "rgb(255, 255, 255)", f"desktop: the page tile is not white in dark mode: {tile}")
+    page.reload(wait_until="load")
+    check(page.get_attribute("html", "data-theme") == "dark", "desktop: the theme was forgotten on reload")
+    page.click("#themeToggle")
+    page.wait_for_timeout(200)
+    check(page.get_attribute("html", "data-theme") == "light", "desktop: the toggle does not go back")
+    page.evaluate("localStorage.removeItem('pdfdesk.theme')")
+    page.reload(wait_until="load")
+
     watch.quiet("desktop")
     context.close()
     browser.close()

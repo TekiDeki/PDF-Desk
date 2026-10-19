@@ -57,6 +57,10 @@
       node.setAttribute("placeholder", t(node.getAttribute("data-i18n-placeholder")));
     });
     el.langSelect.value = state.lang;
+    if (el.themeToggle) {
+      el.themeToggle.setAttribute("aria-label", t("themeLabel"));
+      el.themeToggle.title = t("themeLabel");
+    }
     render();
   }
 
@@ -431,6 +435,15 @@
 
   /* ------------------------------------------------------------ wiring */
 
+  function paintThemeButton() {
+    if (!el.themeToggle) return;
+    var dark = document.documentElement.getAttribute("data-theme") === "dark";
+    el.themeToggle.textContent = dark ? "\u2600\uFE0F" : "\u{1F319}";
+    el.themeToggle.setAttribute("aria-pressed", dark ? "true" : "false");
+    if (LOCALES[state.lang]) el.themeToggle.setAttribute("aria-label", t("themeLabel"));
+    el.themeToggle.title = el.themeToggle.getAttribute("aria-label") || "Toggle dark theme";
+  }
+
   function boot() {
     el.drop = document.getElementById("drop");
     el.fileInput = document.getElementById("fileInput");
@@ -449,6 +462,7 @@
     el.undoBtn = document.getElementById("undoBtn");
     el.resetBtn = document.getElementById("resetBtn");
     el.langSelect = document.getElementById("langSelect");
+    el.themeToggle = document.getElementById("themeToggle");
     el.toast = document.getElementById("toast");
 
     state.lang = detectLang();
@@ -456,10 +470,21 @@
     el.outName.value = state.outName;
     el.pageSize.value = state.pageSize;
 
+    if (el.themeToggle) paintThemeButton();
+
     el.langSelect.addEventListener("change", function () {
       state.lang = el.langSelect.value;
       savePrefs();
       applyLang();
+    });
+
+    el.themeToggle.addEventListener("click", function () {
+      var dark = document.documentElement.getAttribute("data-theme") !== "dark";
+      document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+      try { localStorage.setItem("pdfdesk.theme", dark ? "dark" : "light"); } catch (error) { /* private mode */ }
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute("content", dark ? "#08161b" : "#0a1d23");
+      paintThemeButton();
     });
 
     el.chooseBtn.addEventListener("click", function (event) {

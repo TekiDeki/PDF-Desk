@@ -58,7 +58,8 @@
     "privacyTitle": "Nothing leaves this device",
     "privacyBody": "The pages are read in this tab. There is no server, no upload and no account. Close the tab and the files are gone from memory.",
     "footer": "A TekiDeki tool. Free, no account, no tracking.",
-    "langLabel": "Language"
+    "langLabel": "Language",
+    "themeLabel": "Toggle dark theme"
   },
   "ro": {
     "docTitle": "PDF Desk - unește, taie și rotește PDF-uri în browser",
@@ -119,7 +120,8 @@
     "privacyTitle": "Nimic nu pleacă din acest dispozitiv",
     "privacyBody": "Paginile sunt citite în acest tab. Nu există server, upload sau cont. Închizi tabul și fișierele dispar din memorie.",
     "footer": "O unealtă TekiDeki. Gratuită, fără cont, fără urmărire.",
-    "langLabel": "Limba"
+    "langLabel": "Limba",
+    "themeLabel": "Comută tema întunecată"
   },
   "sr-latn": {
     "docTitle": "PDF Desk - spoji, razdvoji i rotiraj PDF u pregledaču",
@@ -180,6 +182,7 @@
     "privacyTitle": "Ništa ne napušta ovaj uređaj",
     "privacyBody": "Strane se čitaju u ovom tabu. Nema servera, otpremanja ni naloga. Zatvori tab i fajlovi nestaju iz memorije.",
     "footer": "TekiDeki alat. Besplatan, bez naloga, bez praćenja.",
-    "langLabel": "Jezik"
+    "langLabel": "Jezik",
+    "themeLabel": "Uključi tamnu temu"
   }
 }

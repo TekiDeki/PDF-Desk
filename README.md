@@ -17,6 +17,8 @@ Live: <https://freehtml.dev/pdf> · Source: <https://github.com/TekiDeki/PDF-Des
 - **Turn images into pages**: one image per page, on A4, on Letter, or at the
   picture's own size.
 - **Undo**, twenty steps back, for anything done to the page list.
+- **Dark theme**, remembered between visits, or the system one on the first visit.
+  The page tiles stay white on purpose: they stand for the document itself.
 
 Everything happens in the tab. There is no server, no account and no analytics.
 
@@ -44,7 +46,7 @@ document first.
 ```bash
 python3 build.py                  # writes index.html, single file, deterministic
 node tests/logic_test.cjs                      # 68 checks: engine and real PDF work
-python3 tests/ui_test.py                       # 68 checks on Chromium
+python3 tests/ui_test.py                       # 75 checks on Chromium
 BROWSER=firefox python3 tests/ui_test.py       # the same on Firefox
 BROWSER=webkit  python3 tests/ui_test.py       # the same on WebKit, the Safari engine
 
@@ -74,6 +76,7 @@ The UI test starts its own static server, so nothing else has to be running.
 | `build.py` | inlines everything into `index.html` and checks the rules |
 | `index.html` | the built page, committed, served by GitHub Pages |
 | `sw.js` | offline shell |
+| `screenshots/` | desktop, phone, empty and the dark theme, from this build |
 | `tests/fixtures/` | PDFs and images used by the tests, including one encrypted and one corrupted on purpose |
 
 ## Languages

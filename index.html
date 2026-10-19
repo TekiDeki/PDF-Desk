@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-version="1">
+<html lang="en" data-version="2">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -25,7 +25,66 @@
   --danger: #a33a2b;
   --radius: 14px;
   --shadow: 0 1px 2px rgba(10, 29, 35, .06), 0 8px 24px rgba(10, 29, 35, .06);
+  --body-2: #33454a;
+  --body-3: #3d4d52;
+  --glow-teal: rgba(86, 178, 186, .18);
+  --glow-amber: rgba(227, 165, 72, .16);
+  --chip-bg: rgba(15, 102, 116, .09);
+  --chip-line: rgba(15, 102, 116, .16);
+  --drop-line: #c9bda6;
+  --drop-bg: #fbf6ea;
+  --drop-hot: #fff8ea;
+  --drop-over: #eef7f7;
+  --surface: #ffffff;
+  --tile: #f6f1e6;
+  --tag-bg: rgba(86, 178, 186, .18);
+  --close-bg: rgba(10, 29, 35, .06);
+  --note-bg: #eaf5f2;
+  --note-line: #cfe5df;
+  --err-bg: #fbece8;
+  --err-line: #efd0c8;
+  --primary-hover: #eeb45c;
+  --dark-hover: #123039;
   color-scheme: light;
+}
+
+/* Dark theme. The page tiles and the paper preview stay white: they stand for
+ * the document itself, and a page that is about to be printed should not be
+ * shown in another colour. */
+[data-theme="dark"] {
+  --ink: #e9f1ef;
+  --deep: #050d10;
+  --teal: #5cbfc6;
+  --teal-light: #8fd8dd;
+  --cream: #08161b;
+  --paper: #0d2026;
+  --amber: #e3a548;
+  --amber-dark: #f0bb63;
+  --line: #1d3a41;
+  --muted: #95aaac;
+  --danger: #ff97a1;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 8px 24px rgba(0, 0, 0, .4);
+  --body-2: #c9d8d6;
+  --body-3: #bed0ce;
+  --glow-teal: rgba(92, 191, 198, .10);
+  --glow-amber: rgba(227, 165, 72, .08);
+  --chip-bg: rgba(92, 191, 198, .12);
+  --chip-line: rgba(92, 191, 198, .26);
+  --drop-line: #2c4c54;
+  --drop-bg: #0c1f25;
+  --drop-hot: #10272e;
+  --drop-over: #0f2a31;
+  --surface: #0a1c22;
+  --tile: #12282e;
+  --tag-bg: rgba(92, 191, 198, .18);
+  --close-bg: rgba(255, 255, 255, .08);
+  --note-bg: #0f2a31;
+  --note-line: #1d3a41;
+  --err-bg: #2a1518;
+  --err-line: #4d2229;
+  --primary-hover: #f0bb63;
+  --dark-hover: #1d474f;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -36,8 +95,8 @@ body {
   margin: 0;
   background: var(--cream);
   background-image:
-    radial-gradient(circle at 12% 0%, rgba(86, 178, 186, .18), transparent 42%),
-    radial-gradient(circle at 88% 8%, rgba(227, 165, 72, .16), transparent 38%);
+    radial-gradient(circle at 12% 0%, var(--glow-teal), transparent 42%),
+    radial-gradient(circle at 88% 8%, var(--glow-amber), transparent 38%);
   color: var(--ink);
   font: 16px/1.5 "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   min-height: 100vh;
@@ -68,6 +127,29 @@ a { color: var(--teal); }
   letter-spacing: -.01em;
   font-size: 1.06rem;
 }
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.btn-icon:hover { border-color: var(--teal-light); }
 
 .lang {
   display: inline-flex;
@@ -114,7 +196,7 @@ h1 {
 .lede {
   margin: 14px 0 0;
   font-size: clamp(1rem, 1.6vw, 1.12rem);
-  color: #33454a;
+  color: var(--body-2);
   max-width: 62ch;
 }
 
@@ -132,9 +214,9 @@ h1 {
   font-weight: 600;
   padding: 5px 11px;
   border-radius: 999px;
-  background: rgba(15, 102, 116, .09);
+  background: var(--chip-bg);
   color: var(--teal);
-  border: 1px solid rgba(15, 102, 116, .16);
+  border: 1px solid var(--chip-line);
 }
 
 .board {
@@ -162,9 +244,9 @@ h1 {
   text-align: center;
   gap: 6px;
   padding: 18px 16px;
-  border: 2px dashed #c9bda6;
+  border: 2px dashed var(--drop-line);
   border-radius: 12px;
-  background: #fbf6ea;
+  background: var(--drop-bg);
   color: var(--muted);
   cursor: pointer;
   transition: border-color .15s, background .15s, transform .15s;
@@ -172,13 +254,13 @@ h1 {
 
 .drop:hover, .drop:focus-visible {
   border-color: var(--amber);
-  background: #fff8ea;
+  background: var(--drop-hot);
   outline: none;
 }
 
 .drop.over {
   border-color: var(--teal);
-  background: #eef7f7;
+  background: var(--drop-over);
   transform: scale(1.005);
 }
 
@@ -203,10 +285,10 @@ h1 {
 .btn[disabled] { opacity: .45; cursor: not-allowed; }
 
 .btn.primary { background: var(--amber); color: #2b1a05; border-color: var(--amber-dark); }
-.btn.primary:hover:not([disabled]) { background: #eeb45c; }
+.btn.primary:hover:not([disabled]) { background: var(--primary-hover); }
 
 .btn.dark { background: var(--ink); color: var(--cream); }
-.btn.dark:hover:not([disabled]) { background: #123039; }
+.btn.dark:hover:not([disabled]) { background: var(--dark-hover); }
 
 .btn.ghost { background: transparent; border-color: var(--line); color: var(--ink); }
 .btn.ghost:hover:not([disabled]) { border-color: var(--teal); color: var(--teal); }
@@ -251,7 +333,7 @@ h1 {
   border: 1px solid var(--line);
   border-radius: 11px;
   padding: 9px 10px 9px 12px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .file-name {
@@ -271,7 +353,7 @@ h1 {
   letter-spacing: .06em;
   padding: 1px 6px;
   border-radius: 5px;
-  background: rgba(86, 178, 186, .18);
+  background: var(--tag-bg);
   color: var(--teal);
 }
 
@@ -307,7 +389,7 @@ h1 {
   aspect-ratio: 3 / 4;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fff;
+  background: #ffffff;   /* the document itself, white in every theme */
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -320,7 +402,7 @@ h1 {
 
 .page:hover { border-color: var(--teal); box-shadow: 0 2px 10px rgba(15, 102, 116, .16); }
 
-.page .num { font-weight: 700; font-size: 1rem; }
+.page .num { font-weight: 700; font-size: 1rem; color: #6a7b80; }  /* on the white tile, in every theme */
 
 .page .deg {
   position: absolute;
@@ -352,7 +434,7 @@ h1 {
   height: 18px;
   border-radius: 50%;
   border: none;
-  background: rgba(10, 29, 35, .06);
+  background: var(--close-bg);
   color: var(--muted);
   font-size: .7rem;
   line-height: 1;
@@ -388,7 +470,7 @@ h1 {
   padding: 11px 12px;
   border: 1px solid var(--line);
   border-radius: 10px 0 0 10px;
-  background: #fff;
+  background: var(--surface);
   min-width: 0;
   flex: 1;
 }
@@ -402,7 +484,7 @@ h1 {
   border: 1px solid var(--line);
   border-left: none;
   border-radius: 0 10px 10px 0;
-  background: #f6f1e6;
+  background: var(--tile);
   color: var(--muted);
   font-size: .88rem;
 }
@@ -422,7 +504,7 @@ h1 {
   padding: 9px 10px;
   border: 1px solid var(--line);
   border-radius: 9px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .row-buttons { display: flex; gap: 8px; margin-top: 16px; }
@@ -439,11 +521,11 @@ h1 {
 .toast:not(:empty) {
   padding: 11px 14px;
   border-radius: 10px;
-  background: #eaf5f2;
-  border: 1px solid #cfe5df;
+  background: var(--note-bg);
+  border: 1px solid var(--note-line);
 }
 
-.toast.err { color: var(--danger); background: #fbece8; border-color: #efd0c8; }
+.toast.err { color: var(--danger); background: var(--err-bg); border-color: var(--err-line); }
 
 .notes {
   display: grid;
@@ -458,7 +540,7 @@ h1 {
 }
 
 .notes h3 { margin: 0 0 6px; font-size: .95rem; letter-spacing: -.01em; }
-.notes p, .limits { margin: 0; font-size: .9rem; color: #3d4d52; }
+.notes p, .limits { margin: 0; font-size: .9rem; color: var(--body-3); }
 .limits { padding-left: 18px; display: grid; gap: 4px; }
 
 .foot {
@@ -491,6 +573,22 @@ h1 {
   * { transition: none !important; }
 }
 </style>
+<script>
+/* Applied before the first paint: the saved theme, or the system one. */
+(function () {
+  try {
+    var saved = localStorage.getItem("pdfdesk.theme");
+    var dark = saved === "dark" || saved === "light"
+      ? saved === "dark"
+      : !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", dark ? "#08161b" : "#0a1d23");
+  } catch (error) {
+    document.documentElement.setAttribute("data-theme", "light");
+  }
+})();
+</script>
 </head>
 <body>
 <header class="top">
@@ -504,14 +602,17 @@ h1 {
     </svg>
     <span class="brand-name">PDF Desk</span>
   </a>
-  <div class="lang">
-    <label for="langSelect" data-i18n="langLabel">Language</label>
-    <select id="langSelect" aria-label="Language">
-      <option value="en">English</option>
-      <option value="ro">Română</option>
-      <option value="sr-latn">Srpski</option>
-      <option value="sr-cyrl">Српски</option>
-    </select>
+  <div class="top-actions">
+    <div class="lang">
+      <label for="langSelect" data-i18n="langLabel">Language</label>
+      <select id="langSelect" aria-label="Language">
+        <option value="en">English</option>
+        <option value="ro">Română</option>
+        <option value="sr-latn">Srpski</option>
+        <option value="sr-cyrl">Српски</option>
+      </select>
+    </div>
+    <button type="button" id="themeToggle" class="btn-icon" aria-pressed="false" aria-label="Toggle dark theme" title="Toggle dark theme">🌙</button>
   </div>
 </header>
 
@@ -851,10 +952,10 @@ h1 {
 <script>
 /* Generated by build.py from src/i18n/locales.json. Do not edit. */
 window.TD_LOCALES = {
-  "en": {"appName": "PDF Desk", "choose": "Choose files", "claim1": "No upload", "claim2": "No account", "claim3": "Works offline", "claim4": "Free", "deletePage": "Delete this page", "docTitle": "PDF Desk - merge, split and rotate PDFs in your browser", "doneExtract": "Done. The extract is in your downloads.", "doneMerge": "Done. The merged file is in your downloads.", "dropHint": "or choose them from your device. PDF, JPG and PNG.", "dropTitle": "Drop PDFs or images here", "errBig": "There is not enough memory for this file on this device.", "errEmptyRange": "Write at least one page number.", "errEncrypted": "This PDF is password protected. Unlock it first, then add it again.", "errInvalid": "That file is not a PDF or an image this browser can read.", "errNoPages": "Add at least one page first.", "errRange": "That range does not fit the document. It has {n} pages.", "extract": "Download these pages", "fileImage": "image", "filePage": "1 page", "filePages": "{n} pages", "filesEmpty": "No files yet. Add at least one PDF or image.", "filesTitle": "Your files", "footer": "A TekiDeki tool. Free, no account, no tracking.", "h1": "PDFs in. One clean file out.", "langLabel": "Language", "lede": "Drop your documents, put the pages in the order you want, and download the result. The files are read here, in this tab, and never sent anywhere.", "limit1": "No password removal. Protected files are refused, not cracked.", "limit2": "No text editing. Pages are moved and turned, never rewritten.", "limit3": "No OCR. A scan stays a picture and is not made searchable.", "limitsTitle": "What it does not do", "merge": "Merge and download", "moveDown": "Move down", "moveUp": "Move up", "outLabel": "File name", "pageLabel": "Page {n}", "pageSize": "Page size for images", "pagesCap": "Only the first {n} pages are shown. All of them are kept.", "pagesEmpty": "The pages of your files will appear here, in the order they will be saved.", "pagesHint": "Click a page to turn it a quarter. The arrows change the order.", "pagesTitle": "Pages", "privacyBody": "The pages are read in this tab. There is no server, no upload and no account. Close the tab and the files are gone from memory.", "privacyTitle": "Nothing leaves this device", "remove": "Remove file", "reset": "Start over", "rotate": "Turn this page", "saved": "Your settings stay in this browser.", "sizeA4": "A4", "sizeFit": "Fit the image", "sizeLetter": "Letter", "splitHint": "Write the pages you want, in the order you want them, for example 1-3, 5, 8-10. The count starts from the whole document.", "splitPlaceholder": "1-3, 5", "splitTitle": "Extract pages", "summary": "{pages} pages, about {size}", "summaryOne": "1 page, about {size}", "tagline": "Merge, split, rotate. Nothing leaves this tab.", "undo": "Undo", "working": "Working..."},
-  "ro": {"appName": "PDF Desk", "choose": "Alege fișiere", "claim1": "Fără upload", "claim2": "Fără cont", "claim3": "Merge offline", "claim4": "Gratuit", "deletePage": "Șterge pagina", "docTitle": "PDF Desk - unește, taie și rotește PDF-uri în browser", "doneExtract": "Gata. Extrasul este în descărcări.", "doneMerge": "Gata. Fișierul unit este în descărcări.", "dropHint": "sau alege-le din calculator. PDF, JPG și PNG.", "dropTitle": "Trage PDF-uri sau imagini aici", "errBig": "Memoria acestui dispozitiv nu ajunge pentru fișierul ăsta.", "errEmptyRange": "Scrie măcar un număr de pagină.", "errEncrypted": "PDF-ul are parolă. Descuie-l întâi, apoi adaugă-l din nou.", "errInvalid": "Fișierul nu e un PDF sau o imagine pe care browserul o poate citi.", "errNoPages": "Adaugă mai întâi măcar o pagină.", "errRange": "Intervalul nu se potrivește cu documentul. Are {n} pagini.", "extract": "Descarcă paginile astea", "fileImage": "imagine", "filePage": "1 pagină", "filePages": "{n} pagini", "filesEmpty": "Niciun fișier încă. Adaugă măcar un PDF sau o imagine.", "filesTitle": "Fișierele tale", "footer": "O unealtă TekiDeki. Gratuită, fără cont, fără urmărire.", "h1": "PDF-uri la intrare. Un singur fișier curat la ieșire.", "langLabel": "Limba", "lede": "Trage documentele, pune paginile în ordinea dorită și descarcă rezultatul. Fișierele sunt citite aici, în acest tab, și nu sunt trimise nicăieri.", "limit1": "Nu scoate parole. Fișierele protejate sunt refuzate, nu sparte.", "limit2": "Nu editează text. Paginile se mută și se rotesc, nu se rescriu.", "limit3": "Nu face OCR. Un scan rămâne o poză și nu devine căutabil.", "limitsTitle": "Ce nu face", "merge": "Unește și descarcă", "moveDown": "Mută mai jos", "moveUp": "Mută mai sus", "outLabel": "Numele fișierului", "pageLabel": "Pagina {n}", "pageSize": "Dimensiunea paginii pentru imagini", "pagesCap": "Se văd doar primele {n} pagini. Toate sunt păstrate.", "pagesEmpty": "Paginile fișierelor tale apar aici, în ordinea în care vor fi salvate.", "pagesHint": "Apasă pe o pagină ca s-o rotești un sfert. Săgețile schimbă ordinea.", "pagesTitle": "Pagini", "privacyBody": "Paginile sunt citite în acest tab. Nu există server, upload sau cont. Închizi tabul și fișierele dispar din memorie.", "privacyTitle": "Nimic nu pleacă din acest dispozitiv", "remove": "Scoate fișierul", "reset": "Începe din nou", "rotate": "Rotește pagina", "saved": "Setările rămân în acest browser.", "sizeA4": "A4", "sizeFit": "Cât imaginea", "sizeLetter": "Letter", "splitHint": "Scrie paginile dorite, în ordinea dorită, de exemplu 1-3, 5, 8-10. Numărătoarea pornește de la tot documentul.", "splitPlaceholder": "1-3, 5", "splitTitle": "Extrage pagini", "summary": "{pages} pagini, cam {size}", "summaryOne": "1 pagină, cam {size}", "tagline": "Unește, taie, rotește. Nimic nu pleacă din acest tab.", "undo": "Anulează", "working": "Se lucrează..."},
-  "sr-latn": {"appName": "PDF Desk", "choose": "Izaberi fajlove", "claim1": "Bez otpremanja", "claim2": "Bez naloga", "claim3": "Radi offline", "claim4": "Besplatno", "deletePage": "Obriši ovu stranu", "docTitle": "PDF Desk - spoji, razdvoji i rotiraj PDF u pregledaču", "doneExtract": "Gotovo. Izvod je u preuzimanjima.", "doneMerge": "Gotovo. Spojeni fajl je u preuzimanjima.", "dropHint": "ili ih izaberi sa uređaja. PDF, JPG i PNG.", "dropTitle": "Prevuci PDF-ove ili slike ovde", "errBig": "Nema dovoljno memorije za ovaj fajl na ovom uređaju.", "errEmptyRange": "Upiši bar jedan broj strane.", "errEncrypted": "PDF je zaštićen lozinkom. Otključaj ga prvo, pa ga dodaj ponovo.", "errInvalid": "To nije PDF ili slika koju ovaj pregledač može da pročita.", "errNoPages": "Prvo dodaj bar jednu stranu.", "errRange": "Opseg se ne uklapa u dokument. Ima {n} strana.", "extract": "Preuzmi ove strane", "fileImage": "slika", "filePage": "1 strana", "filePages": "{n} strana", "filesEmpty": "Još nema fajlova. Dodaj bar jedan PDF ili sliku.", "filesTitle": "Tvoji fajlovi", "footer": "TekiDeki alat. Besplatan, bez naloga, bez praćenja.", "h1": "PDF-ovi ulaze. Jedan čist fajl izlazi.", "langLabel": "Jezik", "lede": "Prevuci dokumenta, poređaj strane kako želiš i preuzmi rezultat. Fajlovi se čitaju ovde, u ovom tabu, i nigde se ne šalju.", "limit1": "Ne skida lozinke. Zaštićeni fajlovi se odbijaju, ne razbijaju.", "limit2": "Ne menja tekst. Strane se pomiču i okreću, nikad ne prepisuju.", "limit3": "Ne radi OCR. Sken ostaje slika i ne postaje pretraživ.", "limitsTitle": "Šta ne radi", "merge": "Spoji i preuzmi", "moveDown": "Pomeri dole", "moveUp": "Pomeri gore", "outLabel": "Ime fajla", "pageLabel": "Strana {n}", "pageSize": "Veličina strane za slike", "pagesCap": "Prikazano je samo prvih {n} strana. Sve su sačuvane.", "pagesEmpty": "Strane tvojih fajlova pojaviće se ovde, onim redom kojim će biti sačuvane.", "pagesHint": "Klikni na stranu da je okreneš za četvrtinu. Strelice menjaju redosled.", "pagesTitle": "Strane", "privacyBody": "Strane se čitaju u ovom tabu. Nema servera, otpremanja ni naloga. Zatvori tab i fajlovi nestaju iz memorije.", "privacyTitle": "Ništa ne napušta ovaj uređaj", "remove": "Ukloni fajl", "reset": "Počni iznova", "rotate": "Okreni ovu stranu", "saved": "Podešavanja ostaju u ovom pregledaču.", "sizeA4": "A4", "sizeFit": "Kao slika", "sizeLetter": "Letter", "splitHint": "Upiši strane koje želiš, redom kojim ih želiš, na primer 1-3, 5, 8-10. Brojanje počinje od celog dokumenta.", "splitPlaceholder": "1-3, 5", "splitTitle": "Izdvoji strane", "summary": "{pages} strana, oko {size}", "summaryOne": "1 strana, oko {size}", "tagline": "Spoji, razdvoji, rotiraj. Ništa ne napušta ovaj tab.", "undo": "Poništi", "working": "Radim..."},
-  "sr-cyrl": {"appName": "PDF Desk", "choose": "Изабери фајлове", "claim1": "Без отпремања", "claim2": "Без налога", "claim3": "Ради оффлине", "claim4": "Бесплатно", "deletePage": "Обриши ову страну", "docTitle": "PDF Desk - споји, раздвоји и ротирај PDF у прегледачу", "doneExtract": "Готово. Извод је у преузимањима.", "doneMerge": "Готово. Спојени фајл је у преузимањима.", "dropHint": "или их изабери са уређаја. PDF, JPG и PNG.", "dropTitle": "Превуци PDF-ове или слике овде", "errBig": "Нема довољно меморије за овај фајл на овом уређају.", "errEmptyRange": "Упиши бар један број стране.", "errEncrypted": "PDF је заштићен лозинком. Откључај га прво, па га додај поново.", "errInvalid": "То није PDF или слика коју овај прегледач може да прочита.", "errNoPages": "Прво додај бар једну страну.", "errRange": "Опсег се не уклапа у документ. Има {n} страна.", "extract": "Преузми ове стране", "fileImage": "слика", "filePage": "1 страна", "filePages": "{n} страна", "filesEmpty": "Још нема фајлова. Додај бар један PDF или слику.", "filesTitle": "Твоји фајлови", "footer": "TekiDeki алат. Бесплатан, без налога, без праћења.", "h1": "PDF-ови улазе. Један чист фајл излази.", "langLabel": "Језик", "lede": "Превуци документа, поређај стране како желиш и преузми резултат. Фајлови се читају овде, у овом табу, и нигде се не шаљу.", "limit1": "Не скида лозинке. Заштићени фајлови се одбијају, не разбијају.", "limit2": "Не мења текст. Стране се помичу и окрећу, никад не преписују.", "limit3": "Не ради OCR. Скен остаје слика и не постаје претражив.", "limitsTitle": "Шта не ради", "merge": "Споји и преузми", "moveDown": "Помери доле", "moveUp": "Помери горе", "outLabel": "Име фајла", "pageLabel": "Страна {n}", "pageSize": "Величина стране за слике", "pagesCap": "Приказано је само првих {n} страна. Све су сачуване.", "pagesEmpty": "Стране твојих фајлова појавиће се овде, оним редом којим ће бити сачуване.", "pagesHint": "Кликни на страну да је окренеш за четвртину. Стрелице мењају редослед.", "pagesTitle": "Стране", "privacyBody": "Стране се читају у овом табу. Нема сервера, отпремања ни налога. Затвори таб и фајлови нестају из меморије.", "privacyTitle": "Ништа не напушта овај уређај", "remove": "Уклони фајл", "reset": "Почни изнова", "rotate": "Окрени ову страну", "saved": "Подешавања остају у овом прегледачу.", "sizeA4": "A4", "sizeFit": "Као слика", "sizeLetter": "Letter", "splitHint": "Упиши стране које желиш, редом којим их желиш, на пример 1-3, 5, 8-10. Бројање почиње од целог документа.", "splitPlaceholder": "1-3, 5", "splitTitle": "Издвоји стране", "summary": "{pages} страна, око {size}", "summaryOne": "1 страна, око {size}", "tagline": "Споји, раздвоји, ротирај. Ништа не напушта овај таб.", "undo": "Поништи", "working": "Радим..."}
+  "en": {"appName": "PDF Desk", "choose": "Choose files", "claim1": "No upload", "claim2": "No account", "claim3": "Works offline", "claim4": "Free", "deletePage": "Delete this page", "docTitle": "PDF Desk - merge, split and rotate PDFs in your browser", "doneExtract": "Done. The extract is in your downloads.", "doneMerge": "Done. The merged file is in your downloads.", "dropHint": "or choose them from your device. PDF, JPG and PNG.", "dropTitle": "Drop PDFs or images here", "errBig": "There is not enough memory for this file on this device.", "errEmptyRange": "Write at least one page number.", "errEncrypted": "This PDF is password protected. Unlock it first, then add it again.", "errInvalid": "That file is not a PDF or an image this browser can read.", "errNoPages": "Add at least one page first.", "errRange": "That range does not fit the document. It has {n} pages.", "extract": "Download these pages", "fileImage": "image", "filePage": "1 page", "filePages": "{n} pages", "filesEmpty": "No files yet. Add at least one PDF or image.", "filesTitle": "Your files", "footer": "A TekiDeki tool. Free, no account, no tracking.", "h1": "PDFs in. One clean file out.", "langLabel": "Language", "lede": "Drop your documents, put the pages in the order you want, and download the result. The files are read here, in this tab, and never sent anywhere.", "limit1": "No password removal. Protected files are refused, not cracked.", "limit2": "No text editing. Pages are moved and turned, never rewritten.", "limit3": "No OCR. A scan stays a picture and is not made searchable.", "limitsTitle": "What it does not do", "merge": "Merge and download", "moveDown": "Move down", "moveUp": "Move up", "outLabel": "File name", "pageLabel": "Page {n}", "pageSize": "Page size for images", "pagesCap": "Only the first {n} pages are shown. All of them are kept.", "pagesEmpty": "The pages of your files will appear here, in the order they will be saved.", "pagesHint": "Click a page to turn it a quarter. The arrows change the order.", "pagesTitle": "Pages", "privacyBody": "The pages are read in this tab. There is no server, no upload and no account. Close the tab and the files are gone from memory.", "privacyTitle": "Nothing leaves this device", "remove": "Remove file", "reset": "Start over", "rotate": "Turn this page", "saved": "Your settings stay in this browser.", "sizeA4": "A4", "sizeFit": "Fit the image", "sizeLetter": "Letter", "splitHint": "Write the pages you want, in the order you want them, for example 1-3, 5, 8-10. The count starts from the whole document.", "splitPlaceholder": "1-3, 5", "splitTitle": "Extract pages", "summary": "{pages} pages, about {size}", "summaryOne": "1 page, about {size}", "tagline": "Merge, split, rotate. Nothing leaves this tab.", "themeLabel": "Toggle dark theme", "undo": "Undo", "working": "Working..."},
+  "ro": {"appName": "PDF Desk", "choose": "Alege fișiere", "claim1": "Fără upload", "claim2": "Fără cont", "claim3": "Merge offline", "claim4": "Gratuit", "deletePage": "Șterge pagina", "docTitle": "PDF Desk - unește, taie și rotește PDF-uri în browser", "doneExtract": "Gata. Extrasul este în descărcări.", "doneMerge": "Gata. Fișierul unit este în descărcări.", "dropHint": "sau alege-le din calculator. PDF, JPG și PNG.", "dropTitle": "Trage PDF-uri sau imagini aici", "errBig": "Memoria acestui dispozitiv nu ajunge pentru fișierul ăsta.", "errEmptyRange": "Scrie măcar un număr de pagină.", "errEncrypted": "PDF-ul are parolă. Descuie-l întâi, apoi adaugă-l din nou.", "errInvalid": "Fișierul nu e un PDF sau o imagine pe care browserul o poate citi.", "errNoPages": "Adaugă mai întâi măcar o pagină.", "errRange": "Intervalul nu se potrivește cu documentul. Are {n} pagini.", "extract": "Descarcă paginile astea", "fileImage": "imagine", "filePage": "1 pagină", "filePages": "{n} pagini", "filesEmpty": "Niciun fișier încă. Adaugă măcar un PDF sau o imagine.", "filesTitle": "Fișierele tale", "footer": "O unealtă TekiDeki. Gratuită, fără cont, fără urmărire.", "h1": "PDF-uri la intrare. Un singur fișier curat la ieșire.", "langLabel": "Limba", "lede": "Trage documentele, pune paginile în ordinea dorită și descarcă rezultatul. Fișierele sunt citite aici, în acest tab, și nu sunt trimise nicăieri.", "limit1": "Nu scoate parole. Fișierele protejate sunt refuzate, nu sparte.", "limit2": "Nu editează text. Paginile se mută și se rotesc, nu se rescriu.", "limit3": "Nu face OCR. Un scan rămâne o poză și nu devine căutabil.", "limitsTitle": "Ce nu face", "merge": "Unește și descarcă", "moveDown": "Mută mai jos", "moveUp": "Mută mai sus", "outLabel": "Numele fișierului", "pageLabel": "Pagina {n}", "pageSize": "Dimensiunea paginii pentru imagini", "pagesCap": "Se văd doar primele {n} pagini. Toate sunt păstrate.", "pagesEmpty": "Paginile fișierelor tale apar aici, în ordinea în care vor fi salvate.", "pagesHint": "Apasă pe o pagină ca s-o rotești un sfert. Săgețile schimbă ordinea.", "pagesTitle": "Pagini", "privacyBody": "Paginile sunt citite în acest tab. Nu există server, upload sau cont. Închizi tabul și fișierele dispar din memorie.", "privacyTitle": "Nimic nu pleacă din acest dispozitiv", "remove": "Scoate fișierul", "reset": "Începe din nou", "rotate": "Rotește pagina", "saved": "Setările rămân în acest browser.", "sizeA4": "A4", "sizeFit": "Cât imaginea", "sizeLetter": "Letter", "splitHint": "Scrie paginile dorite, în ordinea dorită, de exemplu 1-3, 5, 8-10. Numărătoarea pornește de la tot documentul.", "splitPlaceholder": "1-3, 5", "splitTitle": "Extrage pagini", "summary": "{pages} pagini, cam {size}", "summaryOne": "1 pagină, cam {size}", "tagline": "Unește, taie, rotește. Nimic nu pleacă din acest tab.", "themeLabel": "Comută tema întunecată", "undo": "Anulează", "working": "Se lucrează..."},
+  "sr-latn": {"appName": "PDF Desk", "choose": "Izaberi fajlove", "claim1": "Bez otpremanja", "claim2": "Bez naloga", "claim3": "Radi offline", "claim4": "Besplatno", "deletePage": "Obriši ovu stranu", "docTitle": "PDF Desk - spoji, razdvoji i rotiraj PDF u pregledaču", "doneExtract": "Gotovo. Izvod je u preuzimanjima.", "doneMerge": "Gotovo. Spojeni fajl je u preuzimanjima.", "dropHint": "ili ih izaberi sa uređaja. PDF, JPG i PNG.", "dropTitle": "Prevuci PDF-ove ili slike ovde", "errBig": "Nema dovoljno memorije za ovaj fajl na ovom uređaju.", "errEmptyRange": "Upiši bar jedan broj strane.", "errEncrypted": "PDF je zaštićen lozinkom. Otključaj ga prvo, pa ga dodaj ponovo.", "errInvalid": "To nije PDF ili slika koju ovaj pregledač može da pročita.", "errNoPages": "Prvo dodaj bar jednu stranu.", "errRange": "Opseg se ne uklapa u dokument. Ima {n} strana.", "extract": "Preuzmi ove strane", "fileImage": "slika", "filePage": "1 strana", "filePages": "{n} strana", "filesEmpty": "Još nema fajlova. Dodaj bar jedan PDF ili sliku.", "filesTitle": "Tvoji fajlovi", "footer": "TekiDeki alat. Besplatan, bez naloga, bez praćenja.", "h1": "PDF-ovi ulaze. Jedan čist fajl izlazi.", "langLabel": "Jezik", "lede": "Prevuci dokumenta, poređaj strane kako želiš i preuzmi rezultat. Fajlovi se čitaju ovde, u ovom tabu, i nigde se ne šalju.", "limit1": "Ne skida lozinke. Zaštićeni fajlovi se odbijaju, ne razbijaju.", "limit2": "Ne menja tekst. Strane se pomiču i okreću, nikad ne prepisuju.", "limit3": "Ne radi OCR. Sken ostaje slika i ne postaje pretraživ.", "limitsTitle": "Šta ne radi", "merge": "Spoji i preuzmi", "moveDown": "Pomeri dole", "moveUp": "Pomeri gore", "outLabel": "Ime fajla", "pageLabel": "Strana {n}", "pageSize": "Veličina strane za slike", "pagesCap": "Prikazano je samo prvih {n} strana. Sve su sačuvane.", "pagesEmpty": "Strane tvojih fajlova pojaviće se ovde, onim redom kojim će biti sačuvane.", "pagesHint": "Klikni na stranu da je okreneš za četvrtinu. Strelice menjaju redosled.", "pagesTitle": "Strane", "privacyBody": "Strane se čitaju u ovom tabu. Nema servera, otpremanja ni naloga. Zatvori tab i fajlovi nestaju iz memorije.", "privacyTitle": "Ništa ne napušta ovaj uređaj", "remove": "Ukloni fajl", "reset": "Počni iznova", "rotate": "Okreni ovu stranu", "saved": "Podešavanja ostaju u ovom pregledaču.", "sizeA4": "A4", "sizeFit": "Kao slika", "sizeLetter": "Letter", "splitHint": "Upiši strane koje želiš, redom kojim ih želiš, na primer 1-3, 5, 8-10. Brojanje počinje od celog dokumenta.", "splitPlaceholder": "1-3, 5", "splitTitle": "Izdvoji strane", "summary": "{pages} strana, oko {size}", "summaryOne": "1 strana, oko {size}", "tagline": "Spoji, razdvoji, rotiraj. Ništa ne napušta ovaj tab.", "themeLabel": "Uključi tamnu temu", "undo": "Poništi", "working": "Radim..."},
+  "sr-cyrl": {"appName": "PDF Desk", "choose": "Изабери фајлове", "claim1": "Без отпремања", "claim2": "Без налога", "claim3": "Ради оффлине", "claim4": "Бесплатно", "deletePage": "Обриши ову страну", "docTitle": "PDF Desk - споји, раздвоји и ротирај PDF у прегледачу", "doneExtract": "Готово. Извод је у преузимањима.", "doneMerge": "Готово. Спојени фајл је у преузимањима.", "dropHint": "или их изабери са уређаја. PDF, JPG и PNG.", "dropTitle": "Превуци PDF-ове или слике овде", "errBig": "Нема довољно меморије за овај фајл на овом уређају.", "errEmptyRange": "Упиши бар један број стране.", "errEncrypted": "PDF је заштићен лозинком. Откључај га прво, па га додај поново.", "errInvalid": "То није PDF или слика коју овај прегледач може да прочита.", "errNoPages": "Прво додај бар једну страну.", "errRange": "Опсег се не уклапа у документ. Има {n} страна.", "extract": "Преузми ове стране", "fileImage": "слика", "filePage": "1 страна", "filePages": "{n} страна", "filesEmpty": "Још нема фајлова. Додај бар један PDF или слику.", "filesTitle": "Твоји фајлови", "footer": "TekiDeki алат. Бесплатан, без налога, без праћења.", "h1": "PDF-ови улазе. Један чист фајл излази.", "langLabel": "Језик", "lede": "Превуци документа, поређај стране како желиш и преузми резултат. Фајлови се читају овде, у овом табу, и нигде се не шаљу.", "limit1": "Не скида лозинке. Заштићени фајлови се одбијају, не разбијају.", "limit2": "Не мења текст. Стране се помичу и окрећу, никад не преписују.", "limit3": "Не ради OCR. Скен остаје слика и не постаје претражив.", "limitsTitle": "Шта не ради", "merge": "Споји и преузми", "moveDown": "Помери доле", "moveUp": "Помери горе", "outLabel": "Име фајла", "pageLabel": "Страна {n}", "pageSize": "Величина стране за слике", "pagesCap": "Приказано је само првих {n} страна. Све су сачуване.", "pagesEmpty": "Стране твојих фајлова појавиће се овде, оним редом којим ће бити сачуване.", "pagesHint": "Кликни на страну да је окренеш за четвртину. Стрелице мењају редослед.", "pagesTitle": "Стране", "privacyBody": "Стране се читају у овом табу. Нема сервера, отпремања ни налога. Затвори таб и фајлови нестају из меморије.", "privacyTitle": "Ништа не напушта овај уређај", "remove": "Уклони фајл", "reset": "Почни изнова", "rotate": "Окрени ову страну", "saved": "Подешавања остају у овом прегледачу.", "sizeA4": "A4", "sizeFit": "Као слика", "sizeLetter": "Letter", "splitHint": "Упиши стране које желиш, редом којим их желиш, на пример 1-3, 5, 8-10. Бројање почиње од целог документа.", "splitPlaceholder": "1-3, 5", "splitTitle": "Издвоји стране", "summary": "{pages} страна, око {size}", "summaryOne": "1 страна, око {size}", "tagline": "Споји, раздвоји, ротирај. Ништа не напушта овај таб.", "themeLabel": "Укључи тамну тему", "undo": "Поништи", "working": "Радим..."}
 };
 </script>
 <script>
@@ -917,6 +1018,10 @@ window.TD_LOCALES = {
       node.setAttribute("placeholder", t(node.getAttribute("data-i18n-placeholder")));
     });
     el.langSelect.value = state.lang;
+    if (el.themeToggle) {
+      el.themeToggle.setAttribute("aria-label", t("themeLabel"));
+      el.themeToggle.title = t("themeLabel");
+    }
     render();
   }
 
@@ -1291,6 +1396,15 @@ window.TD_LOCALES = {
 
   /* ------------------------------------------------------------ wiring */
 
+  function paintThemeButton() {
+    if (!el.themeToggle) return;
+    var dark = document.documentElement.getAttribute("data-theme") === "dark";
+    el.themeToggle.textContent = dark ? "\u2600\uFE0F" : "\u{1F319}";
+    el.themeToggle.setAttribute("aria-pressed", dark ? "true" : "false");
+    if (LOCALES[state.lang]) el.themeToggle.setAttribute("aria-label", t("themeLabel"));
+    el.themeToggle.title = el.themeToggle.getAttribute("aria-label") || "Toggle dark theme";
+  }
+
   function boot() {
     el.drop = document.getElementById("drop");
     el.fileInput = document.getElementById("fileInput");
@@ -1309,6 +1423,7 @@ window.TD_LOCALES = {
     el.undoBtn = document.getElementById("undoBtn");
     el.resetBtn = document.getElementById("resetBtn");
     el.langSelect = document.getElementById("langSelect");
+    el.themeToggle = document.getElementById("themeToggle");
     el.toast = document.getElementById("toast");
 
     state.lang = detectLang();
@@ -1316,10 +1431,21 @@ window.TD_LOCALES = {
     el.outName.value = state.outName;
     el.pageSize.value = state.pageSize;
 
+    if (el.themeToggle) paintThemeButton();
+
     el.langSelect.addEventListener("change", function () {
       state.lang = el.langSelect.value;
       savePrefs();
       applyLang();
+    });
+
+    el.themeToggle.addEventListener("click", function () {
+      var dark = document.documentElement.getAttribute("data-theme") !== "dark";
+      document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+      try { localStorage.setItem("pdfdesk.theme", dark ? "dark" : "light"); } catch (error) { /* private mode */ }
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute("content", dark ? "#08161b" : "#0a1d23");
+      paintThemeButton();
     });
 
     el.chooseBtn.addEventListener("click", function (event) {
@@ -1385,6 +1511,6 @@ window.TD_LOCALES = {
   }
 })();
 </script>
-<!-- PDF Desk 1 - single file build -->
+<!-- PDF Desk 2 - single file build -->
 </body>
 </html>
