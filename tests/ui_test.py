@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 # PDF Desk · end to end tests
 # SPDX-License-Identifier: Apache-2.0
-"""Drives index.html in Chromium on a desktop and on a touch tablet.
+"""Drives index.html on a desktop, a touch tablet and a touch phone.
 
-    python3 tests/ui_test.py
+    python3 tests/ui_test.py                  # Chromium
+    BROWSER=firefox python3 tests/ui_test.py  # Firefox
 
 Starts its own static server on a free port, so no other process is needed.
-Downloads are captured and opened again in the page, so the PDF that the user
-would get is the one that gets checked.
+Downloads are captured and read back through pdf-lib, so the PDF that the user
+would get is the one that gets checked, not a mock of it.
 """
 from __future__ import annotations
 
 import functools
+import os
 import subprocess
 import sys
 import threading
@@ -23,7 +25,26 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parents[1]
 FIX = ROOT / "tests" / "fixtures"
 OUT = ROOT / "tests" / "out"
+BROWSER = os.environ.get("BROWSER", "chromium").strip().lower()
 checks = 0
+
+
+def launch(pw):
+    """Firefox refuses is_mobile, so the phone pass drops it there."""
+    return getattr(pw, BROWSER).launch()
+
+
+def version_of(pw):
+    browser = launch(pw)
+    value = browser.version
+    browser.close()
+    return value
+
+
+def context_options(**options):
+    if BROWSER == "firefox":
+        options.pop("is_mobile", None)
+    return options
 
 
 def check(condition, message):
@@ -119,8 +140,9 @@ def save_download(page, action, name):
 
 
 def desktop_run(pw, url):
-    browser = pw.chromium.launch()
-    context = browser.new_context(viewport={"width": 1280, "height": 900}, accept_downloads=True)
+    browser = launch(pw)
+    context = browser.new_context(**context_options(
+        viewport={"width": 1280, "height": 900}, accept_downloads=True))
     page, watch = open_app(context, url)
 
     check("PDF Desk" in page.title(), "the title names the app")
@@ -212,19 +234,39 @@ def desktop_run(pw, url):
     page.select_option("#langSelect", "en")
     check("Merge" in page.locator("#mergeBtn").inner_text(), "back to English")
 
+    # A real drop event, the way a file arrives from the desktop. This is a
+    # different handler from the file picker, so it gets its own check.
+    # The reload above emptied the board on purpose: documents are never kept.
+    check(page.locator(".page").count() == 0, "a reload forgets the files, by design")
+    handle = page.evaluate_handle(
+        """async () => {
+            const data = new DataTransfer();
+            const response = await fetch('/tests/fixtures/invoice.pdf');
+            data.items.add(new File([await response.blob()], 'dropped.pdf',
+                                    { type: 'application/pdf' }));
+            return data;
+        }"""
+    )
+    page.dispatch_event("#drop", "drop", {"dataTransfer": handle})
+    page.wait_for_function("() => document.querySelectorAll('.page').length === 3", timeout=15000)
+    check(page.locator(".file-name").first.inner_text() == "dropped.pdf",
+          "the dropped file keeps its name")
+    dropped = save_download(page, lambda: page.locator("#mergeBtn").click(), "dropped.pdf")
+    check(pages_in_file(dropped) == 3, "the merged file from a drop has three pages")
+
     watch.quiet("desktop")
     context.close()
     browser.close()
 
 
 def tablet_run(pw, url):
-    browser = pw.chromium.launch()
-    context = browser.new_context(
+    browser = launch(pw)
+    context = browser.new_context(**context_options(
         viewport={"width": 820, "height": 1180},
         has_touch=True,
         is_mobile=False,
         accept_downloads=True,
-    )
+    ))
     page, watch = open_app(context, url)
 
     check(page.locator("#chooseBtn").is_visible(), "the tablet sees the choose button")
@@ -251,14 +293,14 @@ def tablet_run(pw, url):
 
 
 def phone_run(pw, url):
-    browser = pw.chromium.launch()
-    context = browser.new_context(
+    browser = launch(pw)
+    context = browser.new_context(**context_options(
         viewport={"width": 390, "height": 844},
         has_touch=True,
         is_mobile=True,
         device_scale_factor=3,
         accept_downloads=True,
-    )
+    ))
     page, watch = open_app(context, url)
 
     add_files(page, ["invoice.pdf", "photo.jpg"])
@@ -289,10 +331,11 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     with Server(ROOT) as server:
         with sync_playwright() as pw:
+            version = version_of(pw)
             desktop_run(pw, server.url)
             tablet_run(pw, server.url)
             phone_run(pw, server.url)
-    print(f"{checks} ui checks passed")
+    print(f"{checks} ui checks passed on {BROWSER} {version}")
 
 
 if __name__ == "__main__":

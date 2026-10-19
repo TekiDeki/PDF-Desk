@@ -43,8 +43,14 @@ document first.
 
 ```bash
 python3 build.py                  # writes index.html, single file, deterministic
-node tests/logic_test.cjs         # 68 checks: engine and real PDF work, no browser
-python3 tests/ui_test.py          # 63 checks: desktop, touch tablet and touch phone
+node tests/logic_test.cjs                      # 68 checks: engine and real PDF work
+python3 tests/ui_test.py                       # 68 checks on Chromium
+BROWSER=firefox python3 tests/ui_test.py       # the same on Firefox
+BROWSER=webkit  python3 tests/ui_test.py       # the same on WebKit, the Safari engine
+
+Every pass covers a desktop, a touch tablet at 820x1180 and a touch phone at
+390x844, and every download is read back through pdf-lib and counted. The same
+flow has been run against the live site in all three engines.
 ```
 
 `tests/logic_test.cjs` needs the library installed next to the repo:
