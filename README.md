@@ -5,6 +5,8 @@ nothing is installed, and the page works offline once it has loaded.
 
 Live: <https://freehtml.dev/pdf> · Source: <https://github.com/TekiDeki/PDF-Desk>
 
+![PDF Desk on a desktop](screenshots/desktop.png)
+
 ## What it does
 
 - **Merge** any number of PDFs, JPGs and PNGs into one file, in the order you choose.
