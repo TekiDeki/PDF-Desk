@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PDF Desk - scris 31.10.2026.
+     Un singur URL: unealta e o singura pagina, totul inline. Adresa are slash la final,
+     pentru ca GitHub Pages raspunde 301 de la /PDF-Desk la /PDF-Desk/, iar un sitemap care
+     trimite la un redirect pierde din semnal. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://tekideki.github.io/PDF-Desk/</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>
